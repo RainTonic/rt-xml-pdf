@@ -10,7 +10,15 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
     "typescript": "~5.8.3",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^4.3.1",
+    "@xmldom/xmldom": "^0.8.11",
+    "fast-xml-parser": "^5.2.5",
+    "react": "^19.1.1"
   }
 }
