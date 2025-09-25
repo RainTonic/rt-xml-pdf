@@ -36,13 +36,33 @@ Example XML:
 Then, in your code:
 
 ```javascript
-import { getPdfFromXml } from 'rt-xml-pdf';
+import { getPdfFromXml } from "rt-xml-pdf";
 
 const xmlString = `...`; // your XML
 const pdfBuffer = await getPdfFromXml(xmlString);
 // Use the pdf buffer as needed
 ```
 
+### Templating:
+
+The library works with XML, but you could extend its functionality by
+importing a templating library, like Handlebars.
+
+```bash
+npm install rt-xml-pdf handlebars
+
+```
+
+```javascript
+import Handlebars from "handlebars";
+import { getPdfFromXml } from "rt-xml-pdf";
+
+var template = Handlebars.compile("<text>Hello, {{name}}</text>");
+// execute the compiled template and pass it to getPdfFromXml
+const pdfBuffer = await getPdfFromXml(template({ name: "Freddy" }));
+```
+
 ## Contributing
 
 Feel free to open issues or pull requests on GitHub.
+
