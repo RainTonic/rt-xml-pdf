@@ -229,7 +229,19 @@ const validateNode = (node: any): void => {
       );
     }
   });
-  if (node.children) node.children.forEach(validateNode);
+  if (node.children) {
+    node.children.forEach(validateNode);
+  }
+};
+
+const parseAttribute = (attr: string, value: unknown) => {
+  if (attr === "style" && isString(value)) {
+    return parseStyle(value);
+  }
+  if (attr === "class" && isString(value)) {
+    return value.split(/\s+/);
+  }
+  return value;
 };
 
 function buildParsedNode(obj: any, tag: string): ParsedNode {
@@ -241,13 +253,7 @@ function buildParsedNode(obj: any, tag: string): ParsedNode {
   for (const [key, value] of Object.entries(obj)) {
     if (key.startsWith("@_")) {
       const attr = key.slice(2);
-      if (attr === "style" && typeof value === "string") {
-        node.attrs.style = parseStyle(value);
-      } else if (attr === "class" && typeof value === "string") {
-        node.attrs.class = value.split(/\s+/);
-      } else {
-        node.attrs[attr] = value;
-      }
+      node.attrs[attr] = parseAttribute(attr, value);
     } else if (key === "#text") {
       node.children.push(value as string);
     } else if (typeof value === "string") {
