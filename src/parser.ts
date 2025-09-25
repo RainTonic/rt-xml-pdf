@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
-import { isString } from "./utils";
+import { isString, toCamelCase } from "./utils";
 import { validateAttributes } from "./utils/validateAttributes";
 import {
   documentAllowedAttrs,
@@ -10,6 +10,7 @@ import {
   linkAllowedAttrs,
   svgAllowedAttrs,
   fontAllowedAttrs,
+  handleFont,
 } from "./elements";
 
 export type ParsedNode =
@@ -131,6 +132,9 @@ const allowedAttrs: Record<string, Record<string, (value: any) => boolean>> = {
   image: imageAllowedAttrs,
   link: linkAllowedAttrs,
   font: fontAllowedAttrs,
+  shared: {
+    id: () => true,
+  },
   ...svgAllowedAttrs, // SVG elements have their own attribute maps
 };
 
@@ -194,7 +198,7 @@ const applyClassStyles = (
 
 const validateNode = (node: any): void => {
   if (typeof node === "string") return;
-  const tagValidators = allowedAttrs[node.tag];
+  const tagValidators = { ...allowedAttrs.shared, ...allowedAttrs[node.tag] };
   if (tagValidators) {
     const err = validateAttributes(node.attrs, tagValidators);
     if (err) {
@@ -224,7 +228,7 @@ function buildParsedNode(obj: any, tag: string): ParsedNode {
   };
   for (const [key, value] of Object.entries(obj)) {
     if (key.startsWith("@_")) {
-      const attr = key.slice(2);
+      const attr = toCamelCase(key.slice(2));
       node.attrs[attr] = parseAttribute(attr, value);
     } else if (key === "#text") {
       node.children.push(value as string);
@@ -275,7 +279,6 @@ const extractFonts = (node: any, fonts: any[]): void => {
   if (typeof node === "string") return;
   if (node.tag === "font") {
     // Import here to avoid circular dependency
-    const { handleFont } = require("./elements/font");
     const fontReg = handleFont(node);
     if (fontReg) {
       fonts.push(fontReg);

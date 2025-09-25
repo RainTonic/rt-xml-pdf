@@ -168,7 +168,7 @@ test("should validate SVG attributes", () => {
 });
 
 test("should parse font elements", () => {
-  const xml = `<document><font source="/path/to/font.ttf" family="MyFont" style="normal" weight="normal"/><page><text fontFamily="MyFont">Hello</text></page></document>`;
+  const xml = `<document><font source="/path/to/font.ttf" family="MyFont" weight="normal"/><page><text style="font-family: MyFont">Hello</text></page></document>`;
   const result = parseXML(xml);
   expect(result.fonts).toHaveLength(1);
   expect(result.fonts[0]).toEqual({

@@ -19,7 +19,7 @@ export function handleFont(node: ParsedNode): FontRegistration | null {
 
   const attrs = node.attrs;
   const source = attrs.source;
-  const style = attrs.style || "normal";
+  const style = attrs.fontStyle || "normal";
   const family = attrs.family;
   const weight = attrs.weight || "normal";
 
@@ -38,3 +38,4 @@ export function handleFont(node: ParsedNode): FontRegistration | null {
     fontWeight: weight,
   };
 }
+

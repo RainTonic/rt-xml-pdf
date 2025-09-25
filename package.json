@@ -2,7 +2,7 @@
   "name": "rt-xml-pdf",
   "private": false,
   "author": "Nasir Taov",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "A simple library for generating PDFs in the browser and on the server using react-pdf, without requiring React",
   "type": "module",
   "main": "dist/index.js",

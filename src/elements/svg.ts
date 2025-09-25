@@ -32,13 +32,13 @@ const commonSvgAttrs = {
   transform: () => true,
   fill: () => true,
   stroke: () => true,
-  "stroke-width": () => true,
-  "stroke-linecap": () => true,
-  "stroke-linejoin": () => true,
-  "stroke-dasharray": () => true,
+  strokeWidth: () => true,
+  strokeLinecap: () => true,
+  strokeLinejoin: () => true,
+  strokeDasharray: () => true,
   opacity: () => true,
-  "fill-opacity": () => true,
-  "stroke-opacity": () => true,
+  fillOpacity: () => true,
+  strokeOpacity: () => true,
 };
 
 // SVG-specific attributes for different elements
@@ -109,7 +109,11 @@ function convertNamespacedAttr(attr: string): string {
   return attr.replace(/:/g, "").replace(/([a-z])([A-Z])/g, "$1$2");
 }
 
-export function handleSvgElement(node: ParsedNode, children: any[], key: string): any {
+export function handleSvgElement(
+  node: ParsedNode,
+  children: any[],
+  key: string,
+): any {
   if (typeof node === "string") {
     throw new Error("SVG node cannot be a string");
   }
