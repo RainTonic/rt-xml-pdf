@@ -11,16 +11,6 @@ import { jsx } from "react/jsx-runtime";
 import { readFileSync } from "node:fs";
 import { extname } from "node:path";
 
-// silence react log about keys, since it's not relevant
-// console.log = function (...args: any[]) {
-//   for (const arg in args) {
-//     if (typeof arg === "string" && /warning-keys/.test(arg)) {
-//       continue;
-//     }
-//     console.log(arg);
-//   }
-// };
-
 const componentMap: Record<string, any> = {
   document: Document,
   page: Page,
@@ -29,7 +19,7 @@ const componentMap: Record<string, any> = {
   image: Image,
 };
 
-function buildReactElement(node: ParsedNode): any {
+function buildReactElement(node: ParsedNode, key?: number): any {
   if (typeof node === "string") {
     return node as any; // text content
   }
@@ -65,13 +55,14 @@ function buildReactElement(node: ParsedNode): any {
       props[key] = value;
     }
   }
-  const children = node.children.map(buildReactElement).filter(Boolean);
-  return jsx(Component, { ...props, children });
+  const children = node.children
+    .map((child, index) => buildReactElement(child, index + 1))
+    .filter(Boolean);
+  return jsx(Component, { ...props, children }, key);
 }
 
 export async function getPdfFromXml(xmlString: string) {
   const parsedXml = parseXML(xmlString);
-  console.log(JSON.stringify(parsedXml.root, null, 2));
   const pdfDoc = () => buildReactElement(parsedXml.root);
   if (!pdfDoc || typeof pdfDoc === "string") {
     throw new Error("Root must be a Document element");
