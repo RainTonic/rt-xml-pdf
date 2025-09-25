@@ -1,24 +1,48 @@
 {
-  "name": "rt-pdf",
-  "private": true,
-  "version": "0.0.0",
+  "name": "rt-xml-pdf",
+  "private": false,
+  "author": "Nasir Taov",
+  "version": "0.0.2",
+  "description": "A simple library for generating PDFs in the browser and on the server using react-pdf, without requiring React",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "pdf",
+    "react-pdf",
+    "xml",
+    "generator",
+    "browser",
+    "server"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RainTonic/xml2pdf.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "check": "tsc --noEmit",
-    "build": "tsc",
-    "preview": "vite preview",
+    "build": "tsc --emitDeclarationOnly && rolldown -c rolldown.config.js",
     "test": "vitest"
   },
   "devDependencies": {
     "@types/node": "^24.5.2",
     "@types/react": "^19.1.13",
+    "rolldown": "^1.0.0-beta.40",
     "typescript": "~5.8.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "react": "^19.1.1"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.1",
-    "@xmldom/xmldom": "^0.8.11",
-    "fast-xml-parser": "^5.2.5",
-    "react": "^19.1.1"
+    "fast-xml-parser": "^5.2.5"
   }
 }

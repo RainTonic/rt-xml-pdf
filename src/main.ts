@@ -6,9 +6,10 @@ import {
   Image,
   renderToBuffer,
 } from "@react-pdf/renderer";
-import { readFileSync } from "fs";
 import { parseXML, type ParsedNode } from "./parser";
 import { jsx } from "react/jsx-runtime";
+import { readFileSync } from "node:fs";
+import { extname } from "node:path";
 
 // silence react log about keys, since it's not relevant
 // console.log = function (...args: any[]) {
@@ -52,8 +53,9 @@ function buildReactElement(node: ParsedNode): any {
         !value.startsWith("http") &&
         !value.startsWith("data:")
       ) {
+        const format = extname(value);
         const data = readFileSync(value);
-        props[key] = { data, format: "png" };
+        props[key] = { data, format };
       } else {
         props[key] = value;
         props["source"] = value;

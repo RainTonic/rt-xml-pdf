@@ -1,4 +1,4 @@
-# rt-pdf
+# rt-xml-pdf
 
 A simple library for generating PDFs in the browser and on the server using react-pdf, without requiring React. It works by parsing XML files that directly map to react-pdf components, making it easy to create PDFs from structured markup.
 
@@ -12,7 +12,7 @@ A simple library for generating PDFs in the browser and on the server using reac
 ## Installation
 
 ```bash
-npm install rt-pdf
+npm install rt-xml-pdf
 ```
 
 ## Usage
@@ -36,11 +36,11 @@ Example XML:
 Then, in your code:
 
 ```javascript
-import { generatePDF } from 'rt-pdf';
+import { getPdfFromXml } from 'rt-xml-pdf';
 
 const xmlString = `...`; // your XML
-const pdf = generatePDF(xmlString);
-// Use the pdf as needed
+const pdfBuffer = await getPdfFromXml(xmlString);
+// Use the pdf buffer as needed
 ```
 
 ## Contributing
