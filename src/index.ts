@@ -1,0 +1,1 @@
+export { getPdfFromXml } from "./main";

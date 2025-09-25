@@ -6,7 +6,12 @@ export default defineConfig({
     file: "dist/index.js",
     format: "esm",
   },
-  external: ["react", "fast-xml-parser", "node:fs", "node:path"],
+  external: [
+    "react",
+    "@react-pdf/renderer",
+    "fast-xml-parser",
+    "node:fs",
+    "node:path",
+  ],
   // jsx-runtime will be bundled since it's not external
 });
-
