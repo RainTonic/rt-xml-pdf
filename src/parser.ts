@@ -1,5 +1,16 @@
 import { XMLParser } from "fast-xml-parser";
 import { isString } from "./utils";
+import { validateAttributes } from "./utils/validateAttributes";
+import {
+  documentAllowedAttrs,
+  pageAllowedAttrs,
+  viewAllowedAttrs,
+  textAllowedAttrs,
+  imageAllowedAttrs,
+  linkAllowedAttrs,
+  svgAllowedAttrs,
+  fontAllowedAttrs,
+} from "./elements";
 
 export type ParsedNode =
   | string
@@ -11,6 +22,7 @@ export type ParsedNode =
 
 export interface ParsedXML {
   styles: Record<string, Record<string, string>>;
+  fonts: any[];
   root: ParsedNode;
 }
 
@@ -110,48 +122,16 @@ const allowedCssProperties = new Set([
 allowedCssProperties.delete("cursor");
 
 // Allowed attributes for each tag (from react-pdf components)
-const commonAttributes = {
-  style: (_v: unknown) => true,
-  class: (_v: unknown) => true,
-  wrap: () => true,
-  fixed: () => true,
-  debug: () => true,
-};
 const allowedAttrs: Record<string, Record<string, (value: any) => boolean>> = {
   style: {},
-  document: {
-    title: () => true,
-    author: () => true,
-    subject: () => true,
-    keywords: () => true,
-    creator: () => true,
-    producer: () => true,
-    pageLayout: (v) =>
-      ["singlePage", "oneColumn", "twoColumnLeft", "twoColumnRight"].includes(
-        v,
-      ),
-    pageMode: () => true,
-    pageSize: () => true,
-  },
-  page: {
-    size: isString,
-    orientation: (v) => ["portrait", "landscape"].includes(v),
-    ...commonAttributes,
-  },
-  view: { ...commonAttributes },
-  text: { ...commonAttributes },
-  image: {
-    ...commonAttributes,
-    src: (v) => isString(v),
-    cache: () => true,
-    bookmark: () => {
-      throw new Error("not implemented");
-    },
-  },
-  link: {
-    ...commonAttributes,
-    src: isString,
-  },
+  document: documentAllowedAttrs,
+  page: pageAllowedAttrs,
+  view: viewAllowedAttrs,
+  text: textAllowedAttrs,
+  image: imageAllowedAttrs,
+  link: linkAllowedAttrs,
+  font: fontAllowedAttrs,
+  ...svgAllowedAttrs, // SVG elements have their own attribute maps
 };
 
 // Convert kebab-case to camelCase
@@ -215,20 +195,12 @@ const applyClassStyles = (
 const validateNode = (node: any): void => {
   if (typeof node === "string") return;
   const tagValidators = allowedAttrs[node.tag];
-  if (!tagValidators) {
-    if (node.children) node.children.forEach(validateNode);
-    return;
+  if (tagValidators) {
+    const err = validateAttributes(node.attrs, tagValidators);
+    if (err) {
+      throw new Error(err);
+    }
   }
-  Object.keys(node.attrs).forEach((attr) => {
-    if (!(attr in tagValidators)) {
-      throw new Error(`Unrecognized attribute for ${node.tag}: ${attr}`);
-    }
-    if (!tagValidators[attr](node.attrs[attr])) {
-      throw new Error(
-        `Invalid value for ${node.tag} attribute ${attr}: ${node.attrs[attr]}`,
-      );
-    }
-  });
   if (node.children) {
     node.children.forEach(validateNode);
   }
@@ -299,6 +271,21 @@ const extractStyles = (
   }
 };
 
+const extractFonts = (node: any, fonts: any[]): void => {
+  if (typeof node === "string") return;
+  if (node.tag === "font") {
+    // Import here to avoid circular dependency
+    const { handleFont } = require("./elements/font");
+    const fontReg = handleFont(node);
+    if (fontReg) {
+      fonts.push(fontReg);
+    }
+  }
+  if (node.children) {
+    node.children.forEach((child: any) => extractFonts(child, fonts));
+  }
+};
+
 export function parseXML(xmlString: string): ParsedXML {
   const parser = new XMLParser({
     ignoreAttributes: false,
@@ -322,11 +309,15 @@ export function parseXML(xmlString: string): ParsedXML {
 
   const root = buildParsedNode(rootObj, rootTag);
 
+  // Extract fonts
+  const fonts: any[] = [];
+  extractFonts(root, fonts);
+
   // Apply class styles
   applyClassStyles(root, styles);
 
   // Validate
   validateNode(root);
 
-  return { styles, root };
+  return { styles, fonts, root };
 }

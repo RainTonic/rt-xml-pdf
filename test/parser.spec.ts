@@ -6,6 +6,7 @@ test("should parse xml", () => {
 
   const expected = {
     styles: {},
+    fonts: [],
     root: {
       tag: "document",
       attrs: { title: "n" },
@@ -30,10 +31,11 @@ test("should parse xml", () => {
   expect(parseXML(xml)).toStrictEqual(expected);
 });
 
-test("should parse attributes correctly", () => {
+test("should parse attributes correctly", async () => {
   const xml = `<document title="Nasir"></document>`;
   const expected = {
     styles: {},
+    fonts: [],
     root: {
       tag: "document",
       attrs: { title: "Nasir" },
@@ -78,9 +80,9 @@ test("should parse nodes with styles", () => {
   const xml = `<document><text style="color: red; font-size: 16px;">Hello</text></document>`;
   const doc = parseXML(xml).root;
   if (typeof doc == "string") return;
-  // @ts-expect-error
-  const textAttrs = doc.children[0].attrs;
-  expect(textAttrs).toStrictEqual({
+  const textNode = doc.children[0];
+  if (typeof textNode == "string") return;
+  expect(textNode.attrs).toStrictEqual({
     style: { color: "red", fontSize: "16px" },
   });
 });
@@ -91,6 +93,7 @@ test("should parse style tag in xml", () => {
     styles: {
       myClass: { fontSize: "13px", color: "red" },
     },
+    fonts: [],
     root: {
       tag: "document",
       attrs: {},
@@ -119,6 +122,7 @@ test("should apply class styles when needed", () => {
       "text-sm": { fontSize: "13px" },
       "text-red": { color: "red" },
     },
+    fonts: [],
     root: {
       tag: "document",
       attrs: {},
@@ -147,4 +151,35 @@ test("should apply class styles when needed", () => {
   };
 
   expect(parseXML(xml)).toStrictEqual(expected);
+});
+
+test("should parse SVG elements", () => {
+  const xml = `<document><page><svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="red"/></svg></page></document>`;
+
+  const result = parseXML(xml);
+  // Just check that parsing succeeds and has the expected structure
+  expect(result).toBeDefined();
+  expect(typeof result.root === "object" && result.root.tag).toBe("document");
+});
+
+test("should validate SVG attributes", () => {
+  const xml = `<document><page><svg width="100"><circle cx="50" cy="50" r="40" invalidAttr="value"/></svg></page></document>`;
+  expect(() => parseXML(xml)).toThrowError();
+});
+
+test("should parse font elements", () => {
+  const xml = `<document><font source="/path/to/font.ttf" family="MyFont" style="normal" weight="normal"/><page><text fontFamily="MyFont">Hello</text></page></document>`;
+  const result = parseXML(xml);
+  expect(result.fonts).toHaveLength(1);
+  expect(result.fonts[0]).toEqual({
+    family: "MyFont",
+    src: "/path/to/font.ttf",
+    fontStyle: "normal",
+    fontWeight: "normal",
+  });
+});
+
+test("should validate font attributes", () => {
+  const xml = `<document><font invalidAttr="value"/><page></page></document>`;
+  expect(() => parseXML(xml)).toThrowError();
 });
