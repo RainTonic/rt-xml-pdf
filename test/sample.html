@@ -1,0 +1,173 @@
+<document>
+  <style>
+    .flex {
+      display: flex;
+    }
+    .center {
+      justify-content: center;
+    }
+    .img {
+      width: 90px;
+      height: 75px;
+    }
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .invoice-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .table {
+      border-color: 1px solid #ccc;
+      border-right-width: 0px;
+      display: table;
+      width: 100%;
+    }
+    .thead {
+      flex-direction: row;
+      border-top-width: 1px;
+      background-color: #ccc;
+    }
+    .row {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      border-right-width: 1px;
+      border-left-width: 1px;
+      border-bottom-width: 1px;
+      border-color: #ccc;
+    }
+    .col {
+      flex: 1;
+      border-right-width: 1px;
+      border-color: #ccc;
+    }
+    .total {
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .footer {
+      font-size: 12px;
+      color: #666;
+      margin-top: 40px;
+      text-align: center;
+    }
+  </style>
+  <page style="padding: 40px">
+    <view class="header" fixed>
+      <image src="test/logo.png" class="img" />
+      <text>ABC Company</text>
+    </view>
+    <view class="invoice-title">
+      <text>Invoice #12345</text>
+      <text>Date: 2023-10-01</text>
+    </view>
+    <view>
+      <text style="font-size: 10px">
+        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus
+        ex sapien vitae pellentesque sem placerat. In id cursus mi pretium
+        tellus duis convallis. Tempus leo eu aenean sed diam urna tempor.
+        Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis
+        massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper
+        vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra
+        inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing
+        elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id
+        cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam
+        urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum
+        egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut
+        hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent
+        per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet
+        consectetur adipiscing elit. Quisque faucibus ex sapien vitae
+        pellentesque sem placerat. In id cursus mi pretium tellus duis
+        convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus
+        fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada
+        lacinia integer nunc posuere. Ut hendrerit semper vel class aptent
+        taciti sociosqu. Ad litora torquent per conubia nostra inceptos
+        himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit.
+        Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus
+        mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna
+        tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas.
+        Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit
+        semper vel class aptent taciti sociosqu. Ad litora torquent per conubia
+        nostra inceptos himenaeos.
+      </text>
+    </view>
+    <view style="margin: 70px" />
+    <view class="table">
+      <view class="row thead" fixed>
+        <text class="col">Item</text>
+        <text class="col">Quantity</text>
+        <text class="col">Price</text>
+        <text class="col">Total</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget A</text>
+        <text class="col">2</text>
+        <text class="col">$10.00</text>
+        <text class="col">$20.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget B</text>
+        <text class="col">1</text>
+        <text class="col">$15.00</text>
+        <text class="col">$15.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget C</text>
+        <text class="col">3</text>
+        <text class="col">$5.00</text>
+        <text class="col">$15.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget C</text>
+        <text class="col">3</text>
+        <text class="col">$5.00</text>
+        <text class="col">$15.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget C</text>
+        <text class="col">3</text>
+        <text class="col">$5.00</text>
+        <text class="col">$15.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget C</text>
+        <text class="col">3</text>
+        <text class="col">$5.00</text>
+        <text class="col">$15.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget C</text>
+        <text class="col">3</text>
+        <text class="col">$5.00</text>
+        <text class="col">$15.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget C</text>
+        <text class="col">3</text>
+        <text class="col">$5.00</text>
+        <text class="col">$15.00</text>
+      </view>
+      <view class="row">
+        <text class="col">Widget C</text>
+        <text class="col">10</text>
+        <text class="col">$5.00</text>
+        <text class="col">$15.00</text>
+      </view>
+    </view>
+    <view class="total">
+      <text>Total: $50.00</text>
+    </view>
+    <view class="footer" fixed>
+      <text>Thank you for your business!</text>
+    </view>
+  </page>
+</document>

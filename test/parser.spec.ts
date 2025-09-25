@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { parseXML, parseStyle, type ParsedNode } from "./parser";
+import { parseXML, parseStyle } from "../src/parser";
 
 test("should parse xml", () => {
   const xml = `<document title="n"><page><view><text>Hello, World!</text></view></page></document>`;

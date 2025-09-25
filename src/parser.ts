@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
+import { isString } from "./utils";
 
 export type ParsedNode =
   | string
@@ -18,21 +19,78 @@ const allowedCssProperties = new Set([
   "fontSize",
   "color",
   "display",
+  // margin
   "margin",
+  "marginHorizontal",
+  "marginVertical",
+  "marginTop",
+  "marginRight",
+  "marginBottom",
+  "marginLeft",
+  // padding
   "padding",
+  "paddingHorizontal",
+  "paddingVertical",
+  "paddingTop",
+  "paddingRight",
+  "paddingBottom",
+  "paddingLeft",
+  // border
   "border",
+  "borderColor",
+  "borderStyle",
+  "borderWidth",
+  "borderTop",
+  "borderTopColor",
+  "borderTopStyle",
+  "borderTopWidth",
+  "borderRight",
+  "borderRightColor",
+  "borderRightStyle",
+  "borderRightWidth",
+  "borderBottom",
+  "borderBottomColor",
+  "borderBottomStyle",
+  "borderBottomWidth",
+  "borderLeft",
+  "borderLeftColor",
+  "borderLeftStyle",
+  "borderLeftWidth",
+  "borderTopLeftRadius",
+  "borderTopRightRadius",
+  "borderBottomRightRadius",
+  "borderBottomLeftRadius",
   "backgroundColor",
   "width",
   "height",
+  "alignContent",
+  "alignItems",
+  "alignSelf",
+  "flex",
+  "flexWrap",
+  "flexFlow",
+  "flexGrow",
+  "flexShrink",
+  "flexBasis",
+  "gap",
+  "rowGap",
+  "column",
   "flexDirection",
   "justifyContent",
   "alignItems",
-  "textAlign",
-  "fontWeight",
   "fontFamily",
-  "lineHeight",
+  "fontStyle",
+  "fontWeight",
   "letterSpacing",
+  "lineHeight",
+  "maxLines",
+  "textAlign",
   "textDecoration",
+  "textDecorationColor",
+  "textDecorationStyle",
+  "textIndent",
+  "textOverflow",
+  "textTransform",
   "position",
   "top",
   "left",
@@ -46,15 +104,21 @@ const allowedCssProperties = new Set([
   "overflow",
   "whiteSpace",
   "wordWrap",
-  "textOverflow",
-  "cursor", // wait, test says reject cursor
 ]);
 
 // Actually, from test, reject cursor, so remove it.
 allowedCssProperties.delete("cursor");
 
 // Allowed attributes for each tag (from react-pdf components)
+const commonAttributes = {
+  style: (_v: unknown) => true,
+  class: (_v: unknown) => true,
+  wrap: () => true,
+  fixed: () => true,
+  debug: () => true,
+};
 const allowedAttrs: Record<string, Record<string, (value: any) => boolean>> = {
+  style: {},
   document: {
     title: () => true,
     author: () => true,
@@ -70,19 +134,24 @@ const allowedAttrs: Record<string, Record<string, (value: any) => boolean>> = {
     pageSize: () => true,
   },
   page: {
-    size: () => true,
+    size: isString,
     orientation: (v) => ["portrait", "landscape"].includes(v),
-    wrap: () => true,
+    ...commonAttributes,
   },
-  view: {
-    style: () => true,
-    class: () => true,
+  view: { ...commonAttributes },
+  text: { ...commonAttributes },
+  image: {
+    ...commonAttributes,
+    src: (v) => isString(v),
+    cache: () => true,
+    bookmark: () => {
+      throw new Error("not implemented");
+    },
   },
-  text: {
-    style: () => true,
-    class: () => true,
+  link: {
+    ...commonAttributes,
+    src: isString,
   },
-  style: {},
 };
 
 // Convert kebab-case to camelCase
@@ -255,4 +324,3 @@ export function parseXML(xmlString: string): ParsedXML {
 
   return { styles, root };
 }
-
